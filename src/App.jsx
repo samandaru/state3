@@ -4,27 +4,34 @@ import './style.css'
 
 export default class App extends Component {
   state={
-    search: '',
-    list:data,
+   
+   
+    select:'id',
+    data:data,
   }
   render() {
-    const onSearch =(e)=>{
-      
-      this.setState({search : e.target.value})
-      const newData= data.filter((value)=>{
-        let list = value.name.toLocaleLowerCase()
-       return  list.includes(e.target.value.toLocaleLowerCase())
-       
+    const onChange =(e)=>{
+      const list= data.filter((value)=>{
+        if(Number.isInteger(value[this.state.select])) {
+          let name = value[this.state.select].toString().toLocaleLowerCase();
+          return  name.includes(e.target.value.toLocaleLowerCase());
+        }else{
+            let name = value[this.state.select].toLocaleLowerCase();
+       return  name.includes(e.target.value.toLocaleLowerCase());
+        }
       });
-      this.setState({list :newData})
-    }
+      this.setState({[e.target.name]: e.target.value, data:list})
+    };
+    const onSelect = (e) => {
+      this.setState({select: e.target.value})
+    };
     return (
       <div className='wrapper'>
-        <input type="text" onChange={onSearch}/>
-        <select onChange={onSearch} id="selectList">
-          <option  value="selectId">id</option>
-          <option value="selectName">name</option>
-          <option value="selectStatus">status</option>
+        <input type="text" onChange={onChange}/>
+        <select onChange={onSelect} id="">
+          <option  value="id">id</option>
+          <option value="name">name</option>
+          <option value="status">status</option>
         </select>
         <table border='1' 
         style={{borderCollapse:'collapse', width: '300px'}}>
@@ -37,7 +44,7 @@ export default class App extends Component {
           </thead>
           <tbody>
             {
-            this.state.list.map((value)=>
+            this.state.data.map((value)=>
               <tr>
                 <td>{value.id}</td>
                 <td>{value.name}</td>
